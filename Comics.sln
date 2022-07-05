@@ -5,6 +5,12 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.Web", "Comics.Web\Comics.Web.csproj", "{52A76877-DFF5-495D-9248-71C62118DFFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.UnitTests", "Comics.UnitTests\Comics.UnitTests.csproj", "{6450BBEA-BAF4-4D46-A8E4-60DD37D64877}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.IntegrationTests", "Comics.IntegrationTests\Comics.IntegrationTests.csproj", "{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.ApplicationCore", "Comics.ApplicationCore\Comics.ApplicationCore.csproj", "{D9D9DC32-1486-4689-852F-9BA190455078}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{52A76877-DFF5-495D-9248-71C62118DFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52A76877-DFF5-495D-9248-71C62118DFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52A76877-DFF5-495D-9248-71C62118DFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6450BBEA-BAF4-4D46-A8E4-60DD37D64877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6450BBEA-BAF4-4D46-A8E4-60DD37D64877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6450BBEA-BAF4-4D46-A8E4-60DD37D64877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6450BBEA-BAF4-4D46-A8E4-60DD37D64877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9D9DC32-1486-4689-852F-9BA190455078}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9D9DC32-1486-4689-852F-9BA190455078}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9D9DC32-1486-4689-852F-9BA190455078}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9D9DC32-1486-4689-852F-9BA190455078}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
