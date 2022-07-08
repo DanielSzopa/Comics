@@ -2,3 +2,12 @@
 global using FluentAssertions;
 global using Xunit;
 global using System.Threading.Tasks;
+global using FluentAssertions.Execution;
+global using FluentValidation.TestHelper;
+global using MediatR;
+global using Microsoft.AspNetCore.Mvc;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Net;
+global using System.Threading;
+global using Xunit.Abstractions;

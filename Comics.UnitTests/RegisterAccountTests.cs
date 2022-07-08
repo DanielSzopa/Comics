@@ -1,26 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using Comics.ApplicationCore.Features.Registration;
-using FluentAssertions.Execution;
-using FluentValidation.TestHelper;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Xunit.Abstractions;
+﻿using Comics.ApplicationCore.Features.Registration;
 
 namespace Comics.UnitTests
 {
-    public class RegisterAccountTests
+    public class RegisterAccountTests : IClassFixture<RegisterAccountRequestValidator>
     {
+        private readonly RegisterAccountRequestValidator _registerAccountRequestValidator;
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public RegisterAccountTests(ITestOutputHelper testOutputHelper)
+        public RegisterAccountTests(RegisterAccountRequestValidator registerAccountRequestValidator,ITestOutputHelper testOutputHelper)
         {
+            _registerAccountRequestValidator = registerAccountRequestValidator;
             _testOutputHelper = testOutputHelper;
         }
 
+        #region TestData
         private static IEnumerable<object[]> GetCorrectModelsForValidator()
         {
             var models = new List<RegisterAccountRequest>()
@@ -54,7 +47,7 @@ namespace Comics.UnitTests
                 }
             };
 
-             return models.Select(x =>  new object[] {x});
+            return models.Select(x => new object[] { x });
         }
 
         private static IEnumerable<object[]> GetInvalidModelsForValidator()
@@ -103,8 +96,22 @@ namespace Comics.UnitTests
                 "TestTest!"
             };
 
-            return passwords.Select(x => new object[] {x});
+            return passwords.Select(x => new object[] { x });
         }
+
+        private static IEnumerable<object[]> GetValidPasswordForValidator()
+        {
+            var passwords = new List<string>()
+            {
+                "Test123!",
+                "-Daniel123-",
+                "Wrrr233!",
+                "TestTestdadadadadadada!1"
+            };
+
+            return passwords.Select(x => new object[] { x });
+        }
+        #endregion
 
         [Fact]
         public async Task RegisterAccount_ExecuteRegisterEndpoint_ShouldReturnStatusOk()
@@ -143,12 +150,23 @@ namespace Comics.UnitTests
         public async Task RegisterAccountRequestValidator_ForCorrectModel_ValidatorShouldNotHaveErrors(RegisterAccountRequest request)
         {
             //arrange
-            var validator = new RegisterAccountRequestValidator();
-
             //act
-            var result = await validator.TestValidateAsync(request);
+            var result = await _registerAccountRequestValidator.TestValidateAsync(request);
             //assert
             result.ShouldNotHaveAnyValidationErrors();
+        }
+
+      
+        [Theory]
+        [MemberData(nameof(GetInvalidModelsForValidator))]
+        public async Task RegisterAccountRequestValidator_ForInvalidModel_ValidatorShouldHaveValidationErrors(RegisterAccountRequest request)
+        {
+            //arrange
+            //act
+            var result = await _registerAccountRequestValidator.TestValidateAsync(request);
+
+            //assert
+            result.ShouldHaveAnyValidationError();
         }
 
         [Theory]
@@ -156,11 +174,10 @@ namespace Comics.UnitTests
         public async Task RegisterAccountRequestValidator_ValidatePassword_ForInvalidPassword_ReturnValidationError(string password)
         {
             //arrange
-            var validator = new RegisterAccountRequestValidator();
             var request = new RegisterAccountRequest() { Password = password };
 
             //act
-            var result = await validator.TestValidateAsync(request);
+            var result = await _registerAccountRequestValidator.TestValidateAsync(request);
             _testOutputHelper.WriteLine(result.Errors.Where(x => x.PropertyName == nameof(request.Password)).SingleOrDefault().ErrorMessage);
 
             //assert
@@ -168,18 +185,18 @@ namespace Comics.UnitTests
         }
 
         [Theory]
-        [MemberData(nameof(GetInvalidModelsForValidator))]
-        public async Task RegisterAccountRequestValidator_ForInvalidModel_ValidatorShouldHaveValidationErrors(RegisterAccountRequest request)
+        [MemberData(nameof(GetValidPasswordForValidator))]
+        public async Task RegisterAccountRequestValidator_ValidatePassword_ForValidPassword_ReturnValidationError(string password)
         {
             //arrange
-            var validator = new RegisterAccountRequestValidator();
+            var request = new RegisterAccountRequest() { Password = password };
 
             //act
-            var result = await validator.TestValidateAsync(request);
-            //assert
-            result.ShouldHaveAnyValidationError();
-        }
+            var result = await _registerAccountRequestValidator.TestValidateAsync(request);
 
+            //assert
+            result.ShouldNotHaveValidationErrorFor(x => x.Password);
+        }
     }
 
 }
