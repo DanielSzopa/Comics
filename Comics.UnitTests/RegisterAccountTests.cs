@@ -13,7 +13,7 @@ namespace Comics.UnitTests
             _testOutputHelper = testOutputHelper;
         }
 
-        #region TestData
+        #region Test Data
         private static IEnumerable<object[]> GetCorrectModelsForValidator()
         {
             var models = new List<RegisterAccountRequest>()
@@ -113,14 +113,15 @@ namespace Comics.UnitTests
         }
         #endregion
 
+        #region Controller tests
         [Fact]
-        public async Task RegisterAccount_ExecuteRegisterEndpoint_ShouldReturnStatusOk()
+        public async Task RegisterAccount_ExecuteRegisterController_ShouldReturnStatusOk()
         {
             //arrange
             var mediatorMock = new Mock<IMediator>();
-            var registerAccountEndpoint = new RegisterAccountEndpoint(mediatorMock.Object);
+            var registerAccountController = new RegisterAccountController(mediatorMock.Object);
             //act
-            var actionResult = await registerAccountEndpoint.RegisterAccount(It.IsAny<RegisterAccountRequest>());
+            var actionResult = await registerAccountController.RegisterAccount(It.IsAny<RegisterAccountRequest>());
             var result = actionResult.Result as OkObjectResult;
             //assert
             using (new AssertionScope())
@@ -131,20 +132,21 @@ namespace Comics.UnitTests
         }
 
         [Fact]
-        public async Task RegisterAccount_ExecuteEndpointWithMediator_MediatorShouldExecute()
+        public async Task RegisterAccount_ExecuteControllerWithMediator_MediatorShouldExecute()
         {
             //arrange
             var mediatorMock = new Mock<IMediator>();
-            var registerAccountEndpoint = new RegisterAccountEndpoint(mediatorMock.Object);
+            var registerAccountController = new RegisterAccountController(mediatorMock.Object);
 
             //act
-            await registerAccountEndpoint.RegisterAccount(It.IsAny<RegisterAccountRequest>());
+            await registerAccountController.RegisterAccount(It.IsAny<RegisterAccountRequest>());
 
             //arrange
             mediatorMock.Verify(x => x.Send(It.IsAny<RegisterAccountRequest>(),It.IsAny<CancellationToken>()), Times.Once);
         }
+        #endregion
 
-
+        #region Validator tests
         [Theory]
         [MemberData(nameof(GetCorrectModelsForValidator))]
         public async Task RegisterAccountRequestValidator_ForCorrectModel_ValidatorShouldNotHaveErrors(RegisterAccountRequest request)
@@ -197,6 +199,8 @@ namespace Comics.UnitTests
             //assert
             result.ShouldNotHaveValidationErrorFor(x => x.Password);
         }
+
+        #endregion
     }
 
 }

@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Comics.ApplicationCore.Features.Registration
 {
     [ApiController]
-    public class RegisterAccountEndpoint : ControllerBase
+    public class RegisterAccountController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public RegisterAccountEndpoint(IMediator mediator)
+        public RegisterAccountController(IMediator mediator)
         {
             _mediator = mediator;
         }
