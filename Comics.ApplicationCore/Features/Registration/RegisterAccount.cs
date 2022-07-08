@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Comics.ApplicationCore.Features.Registration
 {
     [ApiController]
-    [Route("/api/v1/account")]
     public class RegisterAccountEndpoint : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -13,17 +13,63 @@ namespace Comics.ApplicationCore.Features.Registration
         {
             _mediator = mediator;
         }
-
-        [HttpPost]
-        public async Task<ActionResult<string>> RegisterAccount([FromBody] RegisterAccountDto registerRequest)
+        public async Task<ActionResult<string>> RegisterAccount([FromBody] RegisterAccountRequest registerAccountRequest)
         {
-            var request = new ReqisterAccountRequest(registerRequest);
-            await _mediator.Send(request);
-            return Ok("");
+            await _mediator.Send(registerAccountRequest);
+            return Ok(" ");
         }
     }
 
-    public class RegisterAccountDto
+    public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccountRequest>
+    {
+        public RegisterAccountRequestValidator()
+        {
+            RuleFor(x => x.FirstName)
+                .NotEmpty()
+                .WithMessage("First Name is required")
+                .MinimumLength(2)
+                .WithMessage("Minimum length is 2")
+                .MaximumLength(50)
+                .WithMessage("Maximum length is 50");
+
+            RuleFor(x => x.LastName)
+                .NotEmpty()
+                .WithMessage("Last Name is required")
+                .MinimumLength(2)
+                .WithMessage("Minimum length is 2")
+                .MaximumLength(50)
+                .WithMessage("Maximum length is 50");
+
+            RuleFor(x => x.UserName)
+                .NotEmpty()
+                .WithMessage("UserName is required")
+                .MinimumLength(3)
+                .WithMessage("Minimum length is 3")
+                .MaximumLength(15)
+                .WithMessage("Maximum length is 15");
+
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .WithMessage("Email is required")
+                .EmailAddress()
+                .WithMessage("Email is invalid");
+
+            RuleFor(x => x.Password)
+                .NotEmpty()
+                .WithMessage("Password can not be empty")
+                .Matches(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,24}$")
+                .WithMessage("Password requirements: \n At least 8 characters \n Max 24 characteres \n At least one number \n Inclusion of at least one special character, e.g., ! @ # ? ]");
+
+            RuleFor(x => x.ConfirmPassword)
+                .NotEmpty()
+                .WithMessage("Password can not be empty")
+                .Equal(x => x.Password)
+                .WithMessage("Passwords do not match");
+
+        }
+    }
+
+    public class RegisterAccountRequest : IRequest
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
@@ -33,20 +79,11 @@ namespace Comics.ApplicationCore.Features.Registration
         public string? ConfirmPassword { get; set; }
     }
 
-    public class ReqisterAccountRequest : IRequest
+    public class RegisterAccountHandler : IRequestHandler<RegisterAccountRequest>
     {
-        public RegisterAccountDto RegisterAccountDto { get; set; }
-        public ReqisterAccountRequest(RegisterAccountDto registerAccountDto)
+        public async Task<Unit> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
         {
-            RegisterAccountDto = registerAccountDto;
-        }
-    }
-
-    public class ReqisterAccountRequestHandler : IRequestHandler<ReqisterAccountRequest>
-    {
-        public async Task<Unit> Handle(ReqisterAccountRequest request, CancellationToken cancellationToken)
-        {
-            throw new Exception();
+            throw new NotImplementedException();
         }
     }
 

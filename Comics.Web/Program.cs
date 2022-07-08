@@ -1,14 +1,17 @@
 using System.Reflection;
 using Comics.ApplicationCore;
+using Comics.ApplicationCore.Features.Registration;
+using FluentValidation.AspNetCore;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(typeof(MediatorAssemblyMarker).Assembly);
 builder.Services.AddMvc().AddApplicationPart(Assembly.Load(new AssemblyName("Comics.ApplicationCore")));
+builder.Services.AddRegistrationServices();
 
 
 var app = builder.Build();
