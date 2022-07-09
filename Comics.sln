@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.IntegrationTests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.ApplicationCore", "Comics.ApplicationCore\Comics.ApplicationCore.csproj", "{D9D9DC32-1486-4689-852F-9BA190455078}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1ED4B76B-9F89-4313-B0D8-5C2995D72855}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{26F86D34-68B8-438C-B14D-5708670AD5A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,5 +43,11 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5EB649D6-95E9-4A32-9DFA-7A38EE79D368}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D9D9DC32-1486-4689-852F-9BA190455078} = {1ED4B76B-9F89-4313-B0D8-5C2995D72855}
+		{52A76877-DFF5-495D-9248-71C62118DFFF} = {1ED4B76B-9F89-4313-B0D8-5C2995D72855}
+		{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB} = {26F86D34-68B8-438C-B14D-5708670AD5A6}
+		{6450BBEA-BAF4-4D46-A8E4-60DD37D64877} = {26F86D34-68B8-438C-B14D-5708670AD5A6}
 	EndGlobalSection
 EndGlobal
