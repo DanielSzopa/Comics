@@ -2,7 +2,6 @@
 global using FluentAssertions;
 global using Xunit;
 global using System.Threading.Tasks;
-global using FluentAssertions.Execution;
 global using FluentValidation.TestHelper;
 global using MediatR;
 global using Microsoft.AspNetCore.Mvc;

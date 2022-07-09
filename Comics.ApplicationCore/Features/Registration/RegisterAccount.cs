@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Comics.ApplicationCore.Features.Registration
 {
+    
     [ApiController]
+    [Route("api/account")]
     public class RegisterAccountController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -13,6 +15,8 @@ namespace Comics.ApplicationCore.Features.Registration
         {
             _mediator = mediator;
         }
+        
+        [HttpPost("register")]
         public async Task<ActionResult> RegisterAccount([FromBody] RegisterAccountRequest registerAccountRequest)
         {
             await _mediator.Send(registerAccountRequest);
@@ -79,12 +83,11 @@ namespace Comics.ApplicationCore.Features.Registration
         public string? ConfirmPassword { get; set; }
     }
 
-    public class RegisterAccountHandler : IRequestHandler<RegisterAccountRequest>
+    public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequest>
     {
         public async Task<Unit> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Unit.Value;
         }
     }
-
 }
