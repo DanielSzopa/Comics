@@ -13,10 +13,10 @@ namespace Comics.ApplicationCore.Features.Registration
         {
             _mediator = mediator;
         }
-        public async Task<ActionResult<string>> RegisterAccount([FromBody] RegisterAccountRequest registerAccountRequest)
+        public async Task<ActionResult> RegisterAccount([FromBody] RegisterAccountRequest registerAccountRequest)
         {
             await _mediator.Send(registerAccountRequest);
-            return Ok(" ");
+            return Ok();
         }
     }
 

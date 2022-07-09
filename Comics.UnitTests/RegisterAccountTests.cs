@@ -115,24 +115,20 @@ namespace Comics.UnitTests
 
         #region Controller tests
         [Fact]
-        public async Task RegisterAccount_ExecuteRegisterController_ShouldReturnStatusOk()
+        public async Task RegisterAccount_ExecuteRegisterEndpoint_ShouldReturnStatusOk()
         {
             //arrange
             var mediatorMock = new Mock<IMediator>();
             var registerAccountController = new RegisterAccountController(mediatorMock.Object);
             //act
             var actionResult = await registerAccountController.RegisterAccount(It.IsAny<RegisterAccountRequest>());
-            var result = actionResult.Result as OkObjectResult;
+            var result = actionResult as OkResult;
             //assert
-            using (new AssertionScope())
-            {
-                result.StatusCode.Should().Be((int)HttpStatusCode.OK);
-                result.Value.Should().BeOfType(typeof(string));
-            }
+            result.StatusCode.Should().Be((int)HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task RegisterAccount_ExecuteControllerWithMediator_MediatorShouldExecute()
+        public async Task RegisterAccount_ExecuteEndpointWithMediator_MediatorShouldExecute()
         {
             //arrange
             var mediatorMock = new Mock<IMediator>();
