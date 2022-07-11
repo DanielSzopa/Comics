@@ -1,4 +1,5 @@
 ﻿using Comics.ApplicationCore.Features.Registration;
+using Comics.ApplicationCore.Models;
 
 namespace Comics.IntegrationTests.RegisterAccount;
 
@@ -55,4 +56,5 @@ public class RegisterAccountRequestTestData
         };
         return models.Select(x => new object[] { x });
     }
+
 }

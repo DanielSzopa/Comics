@@ -1,4 +1,7 @@
-﻿using Comics.ApplicationCore.Features.Registration;
+﻿using AutoFixture;
+using Comics.ApplicationCore.Data;
+using Comics.ApplicationCore.Features.Registration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Comics.UnitTests.RegisterAccount
 {
@@ -8,6 +11,7 @@ namespace Comics.UnitTests.RegisterAccount
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly RegisterAccountController _registerAccountController;
         private readonly Mock<IMediator> _mediatorMock;
+        private readonly ComicsDbContext _dbContext;
 
         public RegisterAccountTests(RegisterAccountRequestValidator registerAccountRequestValidator,ITestOutputHelper testOutputHelper)
         {
@@ -15,6 +19,8 @@ namespace Comics.UnitTests.RegisterAccount
             _testOutputHelper = testOutputHelper;
             _mediatorMock = new Mock<IMediator>();
             _registerAccountController = new RegisterAccountController(_mediatorMock.Object);
+            var builder = new DbContextOptionsBuilder().UseInMemoryDatabase("ComicsDbInMemory");
+            _dbContext = new ComicsDbContext(builder.Options);
         }
         
         #region Controller tests
@@ -99,20 +105,22 @@ namespace Comics.UnitTests.RegisterAccount
 
         #region Handler tests
 
+        [Fact]
         public async Task RegisterAccountRequestHandler_ExecuteRequestHandler_ShouldReturnUnitValue()
         {
             //arrange
-            var requestHandler = new RegisterAccountRequestHandler();
-            
+            var fixture = new Fixture();
+            var requestHandler = new RegisterAccountRequestHandler(_dbContext);
+
             //act
-            var result = await requestHandler.Handle(It.IsAny<RegisterAccountRequest>(), It.IsAny<CancellationToken>());
+            var result = await requestHandler.Handle(fixture.Create<RegisterAccountRequest>(), It.IsAny<CancellationToken>());
             
             //arrange
             result.Should().Be(It.IsAny<Unit>());
         }
         
-
         #endregion
+        
     }
 
 }

@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Comics.ApplicationCore.Data;
+using Comics.ApplicationCore.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,9 +87,31 @@ namespace Comics.ApplicationCore.Features.Registration
 
     public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequest>
     {
+        private readonly ComicsDbContext _dbContext;
+
+        public RegisterAccountRequestHandler(ComicsDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         public async Task<Unit> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
         {
+            var user = MapRegisterAccountRequestToUserEntity(request);
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
             return Unit.Value;
+        }
+
+        private User MapRegisterAccountRequestToUserEntity(RegisterAccountRequest request)
+        {
+            var user = new User()
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                UserName = request.UserName,
+                Email = request.Email,
+                Password = request.Password
+            };
+            return user;
         }
     }
 }
