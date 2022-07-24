@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.Web", "Comics.Web\Comics.Web.csproj", "{52A76877-DFF5-495D-9248-71C62118DFFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comics.Web", "Comics.Web\Comics.Web.csproj", "{52A76877-DFF5-495D-9248-71C62118DFFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.UnitTests", "Comics.UnitTests\Comics.UnitTests.csproj", "{6450BBEA-BAF4-4D46-A8E4-60DD37D64877}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comics.UnitTests", "Comics.UnitTests\Comics.UnitTests.csproj", "{6450BBEA-BAF4-4D46-A8E4-60DD37D64877}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.IntegrationTests", "Comics.IntegrationTests\Comics.IntegrationTests.csproj", "{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comics.IntegrationTests", "Comics.IntegrationTests\Comics.IntegrationTests.csproj", "{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comics.ApplicationCore", "Comics.ApplicationCore\Comics.ApplicationCore.csproj", "{D9D9DC32-1486-4689-852F-9BA190455078}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comics.ApplicationCore", "Comics.ApplicationCore\Comics.ApplicationCore.csproj", "{D9D9DC32-1486-4689-852F-9BA190455078}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1ED4B76B-9F89-4313-B0D8-5C2995D72855}"
 EndProject
@@ -41,13 +41,13 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{52A76877-DFF5-495D-9248-71C62118DFFF} = {1ED4B76B-9F89-4313-B0D8-5C2995D72855}
+		{6450BBEA-BAF4-4D46-A8E4-60DD37D64877} = {26F86D34-68B8-438C-B14D-5708670AD5A6}
+		{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB} = {26F86D34-68B8-438C-B14D-5708670AD5A6}
+		{D9D9DC32-1486-4689-852F-9BA190455078} = {1ED4B76B-9F89-4313-B0D8-5C2995D72855}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5EB649D6-95E9-4A32-9DFA-7A38EE79D368}
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{D9D9DC32-1486-4689-852F-9BA190455078} = {1ED4B76B-9F89-4313-B0D8-5C2995D72855}
-		{52A76877-DFF5-495D-9248-71C62118DFFF} = {1ED4B76B-9F89-4313-B0D8-5C2995D72855}
-		{E1E900C7-06B7-41F5-A0BF-CE8E681A44AB} = {26F86D34-68B8-438C-B14D-5708670AD5A6}
-		{6450BBEA-BAF4-4D46-A8E4-60DD37D64877} = {26F86D34-68B8-438C-B14D-5708670AD5A6}
 	EndGlobalSection
 EndGlobal

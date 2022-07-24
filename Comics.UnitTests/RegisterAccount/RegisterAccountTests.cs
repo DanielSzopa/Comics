@@ -50,7 +50,7 @@ namespace Comics.UnitTests.RegisterAccount
         #region Validator tests
         [Theory]
         [MemberData(nameof(RegisterAccountRequestTestData.RegisterAccountRequest_ValidData), MemberType = typeof(RegisterAccountRequestTestData))]
-        public async Task RegisterAccountRequestValidator_ForCorrectModel_ValidatorShouldNotHaveErrors(RegisterAccountRequest request)
+        public async Task RegisterAccountRequestValidator_ForValidModel_ValidatorShouldNotHaveErrors(RegisterAccountRequest request)
         {
             //arrange
             //act

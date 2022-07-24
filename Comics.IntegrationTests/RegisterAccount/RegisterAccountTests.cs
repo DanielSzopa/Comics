@@ -30,7 +30,7 @@ public class RegisterAccountTests : IClassFixture<WebApplicationFactory<Program>
     
     [Theory]
     [MemberData(nameof(RegisterAccountRequestTestData.RegisterAccountRequest_ValidData),MemberType = typeof(RegisterAccountRequestTestData))]
-    public async Task RegisterAccount_ExecuteRegisterAccountEndpoint_ShouldReturnOk(RegisterAccountRequest request)
+    public async Task RegisterAccount_ExecuteRegisterAccountEndpointForValidData_ShouldReturnOk(RegisterAccountRequest request)
     {
         //arrange
         var httpContent = request.ToJsonHttpContent();
@@ -42,7 +42,7 @@ public class RegisterAccountTests : IClassFixture<WebApplicationFactory<Program>
 
     [Theory]
     [MemberData(nameof(RegisterAccountRequestTestData.RegisterAccountRequest_InvalidData),MemberType = typeof(RegisterAccountRequestTestData))]
-    public async Task RegisterAccount_ExecuteRegisterAccountEndpoint_ShouldReturnBadRequest(RegisterAccountRequest request)
+    public async Task RegisterAccount_ExecuteRegisterAccountEndpointForInvalidData_ShouldReturnBadRequest(RegisterAccountRequest request)
     {
         //arrange
         var httpContent = request.ToJsonHttpContent();
@@ -54,7 +54,7 @@ public class RegisterAccountTests : IClassFixture<WebApplicationFactory<Program>
     
     [Theory]
     [MemberData(nameof(RegisterAccountRequestTestData.RegisterAccountRequest_ValidData),MemberType = typeof(RegisterAccountRequestTestData))]
-    public async Task RegisterAccountRequestHandler_ForValidModel_ShouldRegisterEntity(RegisterAccountRequest request)
+    public async Task RegisterAccount_ForValidModel_ShouldRegisterEntity(RegisterAccountRequest request)
     {
         //arrange
         await ClearUsersInDb();

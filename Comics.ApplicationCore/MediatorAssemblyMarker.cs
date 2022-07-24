@@ -1,7 +1,6 @@
-﻿namespace Comics.ApplicationCore
-{
-    public class MediatorAssemblyMarker
-    {
+﻿namespace Comics.ApplicationCore;
 
-    }
+public class MediatorAssemblyMarker
+{
+
 }
