@@ -1,11 +1,13 @@
 ﻿using AutoFixture;
 using Comics.ApplicationCore.Data;
 using Comics.ApplicationCore.Features.Registration;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace Comics.UnitTests.RegisterAccount
 {
-    public class RegisterAccountTests : IClassFixture<RegisterAccountRequestValidator>
+    public class RegisterAccountTests
     {
         private readonly RegisterAccountRequestValidator _registerAccountRequestValidator;
         private readonly ITestOutputHelper _testOutputHelper;
@@ -13,14 +15,14 @@ namespace Comics.UnitTests.RegisterAccount
         private readonly Mock<IMediator> _mediatorMock;
         private readonly ComicsDbContext _dbContext;
 
-        public RegisterAccountTests(RegisterAccountRequestValidator registerAccountRequestValidator,ITestOutputHelper testOutputHelper)
+        public RegisterAccountTests(ITestOutputHelper testOutputHelper)
         {
-            _registerAccountRequestValidator = registerAccountRequestValidator;
             _testOutputHelper = testOutputHelper;
             _mediatorMock = new Mock<IMediator>();
             _registerAccountController = new RegisterAccountController(_mediatorMock.Object);
             var builder = new DbContextOptionsBuilder().UseInMemoryDatabase("ComicsDbInMemory");
             _dbContext = new ComicsDbContext(builder.Options);
+            _registerAccountRequestValidator = new RegisterAccountRequestValidator(_dbContext);
         }
         
         #region Controller tests
@@ -77,10 +79,13 @@ namespace Comics.UnitTests.RegisterAccount
         public async Task RegisterAccountRequestValidator_ValidatePassword_ForValidPassword_ReturnValidationError(string password)
         {
             //arrange
+            var fixture = new Fixture();
+            var requestFixture = fixture.Create<RegisterAccountRequest>();
+            requestFixture.Password = password;
             var request = new RegisterAccountRequest() { Password = password };
 
             //act
-            var result = await _registerAccountRequestValidator.TestValidateAsync(request);
+            var result = await _registerAccountRequestValidator.TestValidateAsync(requestFixture);
 
             //assert
             result.ShouldNotHaveValidationErrorFor(x => x.Password);
@@ -91,10 +96,13 @@ namespace Comics.UnitTests.RegisterAccount
         public async Task RegisterAccountRequestValidator_ValidatePassword_ForInvalidPassword_ReturnValidationError(string password)
         {
             //arrange
+            var fixture = new Fixture();
+            var requestFixture = fixture.Create<RegisterAccountRequest>();
+            requestFixture.Password = password;
             var request = new RegisterAccountRequest() { Password = password };
 
             //act
-            var result = await _registerAccountRequestValidator.TestValidateAsync(request);
+            var result = await _registerAccountRequestValidator.TestValidateAsync(requestFixture);
             _testOutputHelper.WriteLine(result.Errors.Where(x => x.PropertyName == nameof(request.Password)).SingleOrDefault().ErrorMessage);
 
             //assert
@@ -110,7 +118,12 @@ namespace Comics.UnitTests.RegisterAccount
         {
             //arrange
             var fixture = new Fixture();
-            var requestHandler = new RegisterAccountRequestHandler(_dbContext);
+            var validatorMock = new Mock<IValidator<RegisterAccountRequest>>();
+            var validationResult = new ValidationResult();
+            validatorMock.Setup(v => v.ValidateAsync(It.IsAny<RegisterAccountRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(validationResult);
+            
+            var requestHandler = new RegisterAccountRequestHandler(_dbContext, validatorMock.Object);
 
             //act
             var result = await requestHandler.Handle(fixture.Create<RegisterAccountRequest>(), It.IsAny<CancellationToken>());

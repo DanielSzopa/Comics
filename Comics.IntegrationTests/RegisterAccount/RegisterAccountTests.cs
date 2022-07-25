@@ -1,5 +1,6 @@
 ﻿using Comics.ApplicationCore.Data;
 using Comics.ApplicationCore.Features.Registration;
+using Comics.ApplicationCore.Models;
 using Comics.IntegrationTests.Helpers;
 
 
@@ -68,6 +69,48 @@ public class RegisterAccountTests : IClassFixture<WebApplicationFactory<Program>
             dbResult.Should().Be(1);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
+    }
+
+    [Fact]
+    public async Task RegisterAccountRequestValidator_ValidateIfUserNameOrEmailExist_ForInvalidData_ShouldReturnBadRequest()
+    {
+        //arrange
+        var registerAccountRequest = new RegisterAccountRequest()
+        {
+            FirstName = "Daniel",
+            LastName = "Szopa",
+            Email = "daniel@test123.com",
+            UserName = "daniel123",
+            Password = "Test123-xx",
+            ConfirmPassword = "Test123-xx"
+        };
+
+        var user = new User()
+        {
+            FirstName = registerAccountRequest.FirstName,
+            LastName = registerAccountRequest.LastName,
+            Email = registerAccountRequest.Email,
+            UserName = registerAccountRequest.UserName,
+            Password = registerAccountRequest.Password,
+        };
+
+        var dbContext = GetComicsDbContextFromServices();
+        await dbContext.Users.AddAsync(user);
+        await dbContext.SaveChangesAsync();
+
+        //act
+        try
+        {
+            await _httpClient.PostAsync(_baseRegisterResource, registerAccountRequest.ToJsonHttpContent());
+        }
+        catch (System.Exception ex)
+        {
+
+            throw;
+        }
+        var response = await _httpClient.PostAsync(_baseRegisterResource, registerAccountRequest.ToJsonHttpContent());
+        //assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     private ComicsDbContext GetComicsDbContextFromServices()

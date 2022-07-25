@@ -2,13 +2,14 @@ using System.Reflection;
 using Comics.ApplicationCore;
 using Comics.ApplicationCore.Data;
 using Comics.ApplicationCore.Features.Registration;
+using Comics.ApplicationCore.Middleware;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers().AddFluentValidation();
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(typeof(MediatorAssemblyMarker).Assembly);
@@ -18,6 +19,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ComicsDbContext>(options => options.UseSqlServer(connectionString));
 
 
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -25,6 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

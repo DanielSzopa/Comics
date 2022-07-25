@@ -1,8 +1,11 @@
 ﻿using Comics.ApplicationCore.Data;
+using Comics.ApplicationCore.Exceptions;
 using Comics.ApplicationCore.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Comics.ApplicationCore.Features.Registration;
 
@@ -27,7 +30,7 @@ public class RegisterAccountController : ControllerBase
 
 public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccountRequest>
 {
-    public RegisterAccountRequestValidator()
+    public RegisterAccountRequestValidator(ComicsDbContext db)
     {
         RuleFor(x => x.FirstName)
             .NotEmpty()
@@ -51,13 +54,25 @@ public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccount
             .MinimumLength(3)
             .WithMessage("Minimum length is 3")
             .MaximumLength(15)
-            .WithMessage("Maximum length is 15");
+            .WithMessage("Maximum length is 15")
+        .CustomAsync(async (value, context, _) =>
+        {
+            var isUserNameExist = await db.Users.AnyAsync(u => u.UserName.ToLower() == value.ToLower());
+            if (isUserNameExist)
+                context.AddFailure(nameof(RegisterAccountRequest.UserName), "This user name already exists");
+        });
 
         RuleFor(x => x.Email)
             .NotEmpty()
             .WithMessage("Email is required")
             .EmailAddress()
-            .WithMessage("Email is invalid");
+            .WithMessage("Email is invalid")
+            .CustomAsync(async (value, context, _) =>
+            {
+                var isEmailExist = await db.Users.AnyAsync(u => u.Email.ToLower() == value.ToLower());
+                if (isEmailExist)
+                    context.AddFailure(nameof(RegisterAccountRequest.Email), "This email already exists");
+            });
 
         RuleFor(x => x.Password)
             .NotEmpty()
@@ -76,6 +91,7 @@ public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccount
 
 public class RegisterAccountRequest : IRequest
 {
+
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string UserName { get; set; }
@@ -87,13 +103,21 @@ public class RegisterAccountRequest : IRequest
 public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequest>
 {
     private readonly ComicsDbContext _dbContext;
+    private readonly IValidator<RegisterAccountRequest> _validator;
 
-    public RegisterAccountRequestHandler(ComicsDbContext dbContext)
+    public RegisterAccountRequestHandler(ComicsDbContext dbContext, IValidator<RegisterAccountRequest> validator)
     {
         _dbContext = dbContext;
+        _validator = validator;
     }
     public async Task<Unit> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
     {
+        var validResults = await _validator.ValidateAsync(request);
+        if (!validResults.IsValid)
+        {
+            throw new BadRequestException("test");
+        }
+
         var user = MapRegisterAccountRequestToUserEntity(request);
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
